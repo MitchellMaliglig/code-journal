@@ -38,10 +38,14 @@
               <img src="images/placeholder-image-square.jpg" />
             </div>
             <div class="column-half">
-              <label for="title-input">Title</label>
-              <input id="title-input" />
-              <label for="photo-url-input">Photo URL</label>
-              <input id="photo-url-input" />
+              <div class="row">
+                <label for="title-input">Title</label>
+                <input id="title-input" />
+              </div>
+              <div class="row">
+                <label for="photo-url-input">Photo URL</label>
+                <input id="photo-url-input" />
+              </div>
             </div>
           </div>
           <div class="row">
@@ -50,8 +54,10 @@
               <textarea id="notes-text"></textarea>
             </div>
           </div>
-          <div>
-            <button type="submit">SAVE</button>
+          <div class="row">
+            <div class="column-full">
+              <button type="submit" id="save-button">SAVE</button>
+            </div>
           </div>
         </form>
       </div>
