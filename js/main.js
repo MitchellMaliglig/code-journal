@@ -1,5 +1,13 @@
 'use strict';
 /* global data */
+/*
+interface FormData{
+  title: string;
+  photoUrl: string;
+  notes: string;
+  entryId: number;
+}
+*/
 function checkUrl(str) {
   let url;
   try {
@@ -44,14 +52,18 @@ $saveButton.addEventListener('submit', function(event: Event){
 */
 $entryForm.addEventListener('submit', function (event) {
   event.preventDefault();
-  let $formElements = $entryForm.elements;
-  //if (!$formElements) throw new Error('$formElements missing');
-  console.log('$formElements: ', $formElements);
-  let formData = {
+  const $formElements = $entryForm.elements;
+  // if (!$formElements) throw new Error('$formElements missing');
+  // console.log('$formElements: ', $formElements);
+  const formData = {
     title: $formElements.title.value,
     photoUrl: $formElements.photoUrl.value,
     notes: $formElements.notes.value,
+    entryId: data.nextEntryId,
   };
+  data.nextEntryId++;
+  data.entries.unshift(formData);
+  console.log('data.entries: ', data.entries);
   console.log('formData: ', formData);
 });
 // 1:11  error  'data' is defined but never used  @typescript-eslint/no-unused-vars
