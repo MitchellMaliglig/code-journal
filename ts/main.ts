@@ -1,5 +1,11 @@
 /* global data */
 
+interface FormElements extends HTMLFormControlsCollection {
+  title: HTMLInputElement;
+  photoUrl: HTMLInputElement;
+  notes: HTMLTextAreaElement;
+}
+
 function checkUrl(str: string): boolean {
   let url: URL;
 
@@ -12,7 +18,7 @@ function checkUrl(str: string): boolean {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-const $image = document.querySelector('img') as HTMLImageElement;
+const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
 if (!$image) throw new Error('$image missing');
 console.log('$image: ', $image);
 
@@ -21,6 +27,16 @@ const $photoInput = document.querySelector(
 ) as HTMLInputElement;
 if (!$photoInput) throw new Error('$photoInput missing');
 console.log('$photoInput: ', $photoInput);
+
+const $saveButton = document.querySelector(
+  'button#save-button',
+) as HTMLButtonElement;
+if (!$saveButton) throw new Error('$saveButton missing');
+console.log('$saveButton: ', $saveButton);
+
+const $entryForm = document.querySelector('form#entry-form') as HTMLFormElement;
+if (!$entryForm) throw new Error('$entryForm missing');
+console.log('$entryForm: ', $entryForm);
 
 /*
 let badUrl = '
@@ -39,6 +55,26 @@ $photoInput.addEventListener('input', function (event: Event) {
   } else {
     $image.src = 'images/placeholder-image-square.jpg';
   }
+});
+
+/*
+$saveButton.addEventListener('submit', function(event: Event){
+  event.preventDefault();
+});
+*/
+
+$entryForm.addEventListener('submit', function (event: Event) {
+  event.preventDefault();
+  const $formElements = $entryForm.elements as FormElements;
+  // if (!$formElements) throw new Error('$formElements missing');
+  console.log('$formElements: ', $formElements);
+  const formData = {
+    title: $formElements.title.value,
+    photoUrl: $formElements.photoUrl.value,
+    notes: $formElements.notes.value,
+  };
+
+  console.log('formData: ', formData);
 });
 
 // 1:11  error  'data' is defined but never used  @typescript-eslint/no-unused-vars
