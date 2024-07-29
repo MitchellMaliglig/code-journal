@@ -37,14 +37,17 @@ function toggleNoEntries() {
   }
 }
 function viewSwap(view) {
-  if (view === 'entries') {
-    $dataViewEntries.className = '';
-    $dataViewEntryForm.className = 'hidden';
+  if (view === 'entries' || view === 'entry-form') {
+    if (view === 'entries') {
+      $dataViewEntries.className = '';
+      $dataViewEntryForm.className = 'hidden';
+    } else if (view === 'entry-form') {
+      $dataViewEntries.className = 'hidden';
+      $dataViewEntryForm.className = '';
+    }
     data.view = view;
-  } else if (view === 'entry-form') {
-    $dataViewEntries.className = 'hidden';
-    $dataViewEntryForm.className = '';
-    data.view = view;
+    // show the view which was displayed prior to page refresh.
+    writeData();
   }
 }
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
@@ -68,6 +71,8 @@ const $entriesAnchor = document.querySelector('a.entries');
 if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 const $newAnchor = document.querySelector('a.new');
 if (!$newAnchor) throw new Error('$newAnchor missing');
+const $body = document.querySelector('body');
+if (!$body) throw new Error('$body missing');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
@@ -100,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
   for (let i = 0; i < data.entries.length; i++) {
     $ul.append(renderEntry(data.entries[i]));
   }
-  // remove?
+  viewSwap(data.view);
   if (data.entries.length > 0) {
     toggleNoEntries();
   }
@@ -111,8 +116,3 @@ $entriesAnchor.addEventListener('click', function () {
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
 });
-// 57:10  error  'viewSwap' is defined but never used  @typescript-eslint/no-unused-vars
-const false__ = false;
-if (false__) {
-  viewSwap('');
-}

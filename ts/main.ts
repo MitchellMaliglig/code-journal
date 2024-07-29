@@ -55,14 +55,17 @@ function toggleNoEntries(): void {
 }
 
 function viewSwap(view: string): void {
-  if (view === 'entries') {
-    $dataViewEntries.className = '';
-    $dataViewEntryForm.className = 'hidden';
+  if (view === 'entries' || view === 'entry-form') {
+    if (view === 'entries') {
+      $dataViewEntries.className = '';
+      $dataViewEntryForm.className = 'hidden';
+    } else if (view === 'entry-form') {
+      $dataViewEntries.className = 'hidden';
+      $dataViewEntryForm.className = '';
+    }
     data.view = view;
-  } else if (view === 'entry-form') {
-    $dataViewEntries.className = 'hidden';
-    $dataViewEntryForm.className = '';
-    data.view = view;
+    // show the view which was displayed prior to page refresh.
+    writeData();
   }
 }
 
@@ -102,6 +105,9 @@ if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 
 const $newAnchor = document.querySelector('a.new') as HTMLAnchorElement;
 if (!$newAnchor) throw new Error('$newAnchor missing');
+
+const $body = document.querySelector('body') as HTMLBodyElement;
+if (!$body) throw new Error('$body missing');
 
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
@@ -144,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $ul.append(renderEntry(data.entries[i]));
   }
 
-  // remove?
+  viewSwap(data.view);
+
   if (data.entries.length > 0) {
     toggleNoEntries();
   }
@@ -157,9 +164,3 @@ $entriesAnchor.addEventListener('click', function () {
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
 });
-
-// 57:10  error  'viewSwap' is defined but never used  @typescript-eslint/no-unused-vars
-const false__ = false;
-if (false__) {
-  viewSwap('');
-}
