@@ -1,43 +1,24 @@
+'use strict';
 /* exported data */
-
-interface EntryData {
-  title: string;
-  photoUrl: string;
-  notes: string;
-  entryId: number;
-}
-
-interface Data {
-  view: string;
-  entries: EntryData[];
-  editing: null;
-  nextEntryId: number;
-}
-
 const entryKey = 'entry-data-key';
-
-function writeData(): void {
+function writeData() {
   const json = JSON.stringify(data);
   localStorage.setItem(entryKey, json);
 }
-
-function readData(): Data {
+function readData() {
   const json = localStorage.getItem(entryKey);
-
   if (json !== null) {
     return JSON.parse(json);
   } else {
     return {
       view: 'entry-form',
-      entries: [] as EntryData[],
+      entries: [],
       editing: null,
       nextEntryId: 1,
     };
   }
 }
-
-const data: Data = readData();
-
+const data = readData();
 // 19:10  error  'writeData' is defined but never used  @typescript-eslint/no-unused-vars
 const false_ = false;
 if (false_) {
