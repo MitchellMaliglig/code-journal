@@ -1,21 +1,45 @@
 /* exported data */
 
-// let entries_ = [] as FormData[];
+interface EntryData {
+  title: string;
+  photoUrl: string;
+  notes: string;
+  entryId: number;
+}
 
-const data = {
-  view: 'entry-form',
-  entries: [] as {
-    title: string;
-    photoUrl: string;
-    notes: string;
-    entryId: number;
-  }[],
-  // entries: [] as FormData[],
-  // entries: entries_,
-  editing: null,
-  nextEntryId: 1,
-};
+interface Data {
+  view: string;
+  entries: EntryData[];
+  editing: null;
+  nextEntryId: number;
+}
 
-// 5:7  error  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
-const false__ = false;
-if (false__) console.log(data);
+const entryKey = 'entry-data-key';
+
+function writeData(): void {
+  const json = JSON.stringify(data);
+  localStorage.setItem(entryKey, json);
+}
+
+function readData(): Data {
+  const json = localStorage.getItem(entryKey);
+
+  if (json !== null) {
+    return JSON.parse(json);
+  } else {
+    return {
+      view: 'entry-form',
+      entries: [] as EntryData[],
+      editing: null,
+      nextEntryId: 1,
+    };
+  }
+}
+
+const data: Data = readData();
+
+// 19:10  error  'writeData' is defined but never used  @typescript-eslint/no-unused-vars
+const false_ = false;
+if (false_) {
+  writeData();
+}

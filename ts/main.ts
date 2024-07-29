@@ -6,15 +6,6 @@ interface FormElements extends HTMLFormControlsCollection {
   notes: HTMLTextAreaElement;
 }
 
-/*
-interface FormData{
-  title: string;
-  photoUrl: string;
-  notes: string;
-  entryId: number;
-}
-*/
-
 function checkUrl(str: string): boolean {
   let url: URL;
 
@@ -26,6 +17,8 @@ function checkUrl(str: string): boolean {
 
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
+
+const defaultImageUrl = 'images/placeholder-image-square.jpg';
 
 const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
 if (!$image) throw new Error('$image missing');
@@ -48,12 +41,9 @@ if (!$entryForm) throw new Error('$entryForm missing');
 console.log('$entryForm: ', $entryForm);
 
 /*
-let badUrl = '
-  haha nope
-';
-let goodUrl = '
   https://www.budgetbytes.com/wp-content/uploads/2020/06/BBQ-Chicken-Pizza-V2.jpg
-';
+  https://cookingformysoul.com/wp-content/uploads/2021/04/easy-homemade-hawaiian-pizza-min-768x1152.jpg
+  https://www.acouplecooks.com/wp-content/uploads/2019/06/Mushroom-Pizza-with-Herbs-011.jpg
 */
 
 $photoInput.addEventListener('input', function (event: Event) {
@@ -62,7 +52,7 @@ $photoInput.addEventListener('input', function (event: Event) {
   if (checkUrl($eventTarget.value)) {
     $image.src = $eventTarget.value;
   } else {
-    $image.src = 'images/placeholder-image-square.jpg';
+    $image.src = defaultImageUrl;
   }
 });
 
@@ -77,20 +67,22 @@ $entryForm.addEventListener('submit', function (event: Event) {
   const $formElements = $entryForm.elements as FormElements;
   // if (!$formElements) throw new Error('$formElements missing');
   // console.log('$formElements: ', $formElements);
-  const formData = {
+  const entryData: EntryData = {
     title: $formElements.title.value,
     photoUrl: $formElements.photoUrl.value,
     notes: $formElements.notes.value,
     entryId: data.nextEntryId,
   };
+
   data.nextEntryId++;
 
-  data.entries.unshift(formData);
+  data.entries.unshift(entryData);
+
   console.log('data.entries: ', data.entries);
+  console.log('formData: ', entryData);
 
-  console.log('formData: ', formData);
+  $image.src = defaultImageUrl;
+
+  writeData();
+  $entryForm.reset();
 });
-
-// 1:11  error  'data' is defined but never used  @typescript-eslint/no-unused-vars
-const false_ = false;
-if (false_) console.log(data);
