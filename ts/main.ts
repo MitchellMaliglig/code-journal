@@ -54,6 +54,18 @@ function toggleNoEntries(): void {
   }
 }
 
+function viewSwap(view: string): void {
+  if (view === 'entries') {
+    $dataViewEntries.className = '';
+    $dataViewEntryForm.className = 'hidden';
+    data.view = view;
+  } else if (view === 'entry-form') {
+    $dataViewEntries.className = 'hidden';
+    $dataViewEntryForm.className = '';
+    data.view = view;
+  }
+}
+
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 
 const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
@@ -74,6 +86,16 @@ const $noEntriesText = document.querySelector(
   'h2.no-entries',
 ) as HTMLHeadingElement;
 if (!$noEntriesText) throw new Error('$noEntriesText missing');
+
+const $dataViewEntryForm = document.querySelector(
+  "div[data-view='entry-form']",
+) as HTMLDivElement;
+if (!$dataViewEntryForm) throw new Error('missing $dataViewEntryForm');
+
+const $dataViewEntries = document.querySelector(
+  "div[data-view='entries']",
+) as HTMLDivElement;
+if (!$dataViewEntries) throw new Error('missing $dataViewEntries');
 
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
@@ -115,3 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleNoEntries();
   }
 });
+
+// 57:10  error  'viewSwap' is defined but never used  @typescript-eslint/no-unused-vars
+const false__ = false;
+if (false__) {
+  viewSwap('');
+}

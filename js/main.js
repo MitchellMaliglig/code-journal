@@ -36,6 +36,17 @@ function toggleNoEntries() {
     $noEntriesText.className = 'no-entries';
   }
 }
+function viewSwap(view) {
+  if (view === 'entries') {
+    $dataViewEntries.className = '';
+    $dataViewEntryForm.className = 'hidden';
+    data.view = view;
+  } else if (view === 'entry-form') {
+    $dataViewEntries.className = 'hidden';
+    $dataViewEntryForm.className = '';
+    data.view = view;
+  }
+}
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 const $image = document.querySelector('img#entry-photo');
 if (!$image) throw new Error('$image missing');
@@ -47,6 +58,12 @@ const $ul = document.querySelector('ul');
 if (!$ul) throw new Error('$ul missing');
 const $noEntriesText = document.querySelector('h2.no-entries');
 if (!$noEntriesText) throw new Error('$noEntriesText missing');
+const $dataViewEntryForm = document.querySelector(
+  "div[data-view='entry-form']",
+);
+if (!$dataViewEntryForm) throw new Error('missing $dataViewEntryForm');
+const $dataViewEntries = document.querySelector("div[data-view='entries']");
+if (!$dataViewEntries) throw new Error('missing $dataViewEntries');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
