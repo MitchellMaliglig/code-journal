@@ -88,6 +88,11 @@ $entryForm.addEventListener('submit', function (event) {
   data.nextEntryId++;
   data.entries.unshift(entryData);
   $image.src = defaultImageUrl;
+  $ul.prepend(renderEntry(entryData));
+  viewSwap('entries');
+  if (data.entries.length === 1) {
+    toggleNoEntries();
+  }
   writeData();
   $entryForm.reset();
 });
