@@ -97,6 +97,12 @@ const $dataViewEntries = document.querySelector(
 ) as HTMLDivElement;
 if (!$dataViewEntries) throw new Error('missing $dataViewEntries');
 
+const $entriesAnchor = document.querySelector('a.entries') as HTMLAnchorElement;
+if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
+
+const $newAnchor = document.querySelector('a.new') as HTMLAnchorElement;
+if (!$newAnchor) throw new Error('$newAnchor missing');
+
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
 
@@ -136,6 +142,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (data.entries.length > 0) {
     toggleNoEntries();
   }
+});
+
+$entriesAnchor.addEventListener('click', function () {
+  viewSwap('entries');
+});
+
+$newAnchor.addEventListener('click', function () {
+  viewSwap('entry-form');
 });
 
 // 57:10  error  'viewSwap' is defined but never used  @typescript-eslint/no-unused-vars
