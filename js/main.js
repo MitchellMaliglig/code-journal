@@ -71,8 +71,6 @@ const $entriesAnchor = document.querySelector('a.entries');
 if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 const $newAnchor = document.querySelector('a.new');
 if (!$newAnchor) throw new Error('$newAnchor missing');
-const $body = document.querySelector('body');
-if (!$body) throw new Error('$body missing');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {

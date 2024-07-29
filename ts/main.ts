@@ -106,9 +106,6 @@ if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 const $newAnchor = document.querySelector('a.new') as HTMLAnchorElement;
 if (!$newAnchor) throw new Error('$newAnchor missing');
 
-const $body = document.querySelector('body') as HTMLBodyElement;
-if (!$body) throw new Error('$body missing');
-
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
 
