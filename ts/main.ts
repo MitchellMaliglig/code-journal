@@ -46,6 +46,14 @@ function renderEntry(entry: EntryData): HTMLLIElement {
   return $listItem;
 }
 
+function toggleNoEntries(): void {
+  if ($noEntriesText.className === 'no-entries') {
+    $noEntriesText.className = 'no-entries hidden';
+  } else {
+    $noEntriesText.className = 'no-entries';
+  }
+}
+
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 
 const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
@@ -58,6 +66,14 @@ if (!$photoInput) throw new Error('$photoInput missing');
 
 const $entryForm = document.querySelector('form#entry-form') as HTMLFormElement;
 if (!$entryForm) throw new Error('$entryForm missing');
+
+const $ul = document.querySelector('ul') as HTMLUListElement;
+if (!$ul) throw new Error('$ul missing');
+
+const $noEntriesText = document.querySelector(
+  'h2.no-entries',
+) as HTMLHeadingElement;
+if (!$noEntriesText) throw new Error('$noEntriesText missing');
 
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
@@ -89,13 +105,13 @@ $entryForm.addEventListener('submit', function (event: Event) {
   $entryForm.reset();
 });
 
-const d: EntryData = {
-  title: 'Mushroom Pizza',
-  photoUrl:
-    'https://www.acouplecooks.com/wp-content/uploads/2019/06/Mushroom-Pizza-with-Herbs-011.jpg',
-  notes: 'Tasty, so very tasty.',
-  entryId: 0,
-};
+document.addEventListener('DOMContentLoaded', function () {
+  for (let i = 0; i < data.entries.length; i++) {
+    $ul.append(renderEntry(data.entries[i]));
+  }
 
-const $ul = document.querySelector('ul');
-$ul?.appendChild(renderEntry(d));
+  // remove?
+  if (data.entries.length > 0) {
+    toggleNoEntries();
+  }
+});

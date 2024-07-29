@@ -10,24 +10,31 @@ function checkUrl(str) {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 function renderEntry(entry) {
-  let $listItem = document.createElement('li');
-  let $row = document.createElement('div');
+  const $listItem = document.createElement('li');
+  const $row = document.createElement('div');
   $row.setAttribute('class', 'row');
-  let $imageHalf = document.createElement('div');
+  const $imageHalf = document.createElement('div');
   $imageHalf.setAttribute('class', 'column-half');
-  let $image = document.createElement('img');
+  const $image = document.createElement('img');
   $image.src = entry.photoUrl;
-  let $textHalf = document.createElement('div');
+  const $textHalf = document.createElement('div');
   $textHalf.setAttribute('class', 'column-half');
-  let $h3 = document.createElement('h3');
+  const $h3 = document.createElement('h3');
   $h3.textContent = entry.title;
-  let $p = document.createElement('p');
+  const $p = document.createElement('p');
   $p.textContent = entry.notes;
   $listItem.append($row);
   $imageHalf.append($image);
   $textHalf.append($h3, $p);
   $row.append($imageHalf, $textHalf);
   return $listItem;
+}
+function toggleNoEntries() {
+  if ($noEntriesText.className === 'no-entries') {
+    $noEntriesText.className = 'no-entries hidden';
+  } else {
+    $noEntriesText.className = 'no-entries';
+  }
 }
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 const $image = document.querySelector('img#entry-photo');
@@ -36,6 +43,10 @@ const $photoInput = document.querySelector('input#photo-url-input');
 if (!$photoInput) throw new Error('$photoInput missing');
 const $entryForm = document.querySelector('form#entry-form');
 if (!$entryForm) throw new Error('$entryForm missing');
+const $ul = document.querySelector('ul');
+if (!$ul) throw new Error('$ul missing');
+const $noEntriesText = document.querySelector('h2.no-entries');
+if (!$noEntriesText) throw new Error('$noEntriesText missing');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
@@ -59,12 +70,12 @@ $entryForm.addEventListener('submit', function (event) {
   writeData();
   $entryForm.reset();
 });
-let d = {
-  title: 'Mushroom Pizza',
-  photoUrl:
-    'https://www.acouplecooks.com/wp-content/uploads/2019/06/Mushroom-Pizza-with-Herbs-011.jpg',
-  notes: 'Tasty, so very tasty.',
-  entryId: 0,
-};
-let $ul = document.querySelector('ul');
-$ul?.appendChild(renderEntry(d));
+document.addEventListener('DOMContentLoaded', function () {
+  for (let i = 0; i < data.entries.length; i++) {
+    $ul.append(renderEntry(data.entries[i]));
+  }
+  // remove?
+  if (data.entries.length > 0) {
+    toggleNoEntries();
+  }
+});

@@ -30,6 +30,10 @@ textarea {
   height: 4rem;
 }
 
+h2.no-entries {
+  text-align: center;
+}
+
 /* yes */
 
 button {
