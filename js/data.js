@@ -1,12 +1,12 @@
 'use strict';
 /* exported data */
-let entryKey = 'entry-data-key';
+const entryKey = 'entry-data-key';
 function writeData() {
-  let json = JSON.stringify(data);
+  const json = JSON.stringify(data);
   localStorage.setItem(entryKey, json);
 }
 function readData() {
-  let json = localStorage.getItem(entryKey);
+  const json = localStorage.getItem(entryKey);
   if (json !== null) {
     return JSON.parse(json);
   } else {
@@ -18,4 +18,9 @@ function readData() {
     };
   }
 }
-let data = readData();
+const data = readData();
+// 19:10  error  'writeData' is defined but never used  @typescript-eslint/no-unused-vars
+const false_ = false;
+if (false_) {
+  writeData();
+}
