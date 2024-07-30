@@ -21,6 +21,7 @@
         <div class="row">
           <div class="column-full">
             <h1>Code Journal</h1>
+            <a class="entries">Entries</a>
           </div>
         </div>
       </div>
@@ -53,7 +54,7 @@
           </div>
           <div class="row">
             <div class="column-full">
-              <label for="notes-text">Notes</label>
+              <label for="notes-textarea">Notes</label>
               <textarea id="notes-textarea" name="notes" required></textarea>
             </div>
           </div>
@@ -64,7 +65,16 @@
           </div>
         </form>
       </div>
-      <div data-view="entries" class="hidden"></div>
+      <div data-view="entries" class="hidden">
+        <div class="row">
+          <div class="column-full">
+            <h2 class="entries">Entries</h2>
+            <a class="new">NEW</a>
+          </div>
+        </div>
+        <h2 class="no-entries">No entries have been recorded</h2>
+        <ul></ul>
+      </div>
     </main>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
