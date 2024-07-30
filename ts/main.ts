@@ -79,10 +79,20 @@ const defaultImageUrl = 'images/placeholder-image-square.jpg';
 const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
 if (!$image) throw new Error('$image missing');
 
+const $titleInput = document.querySelector(
+  'input#title-input',
+) as HTMLInputElement;
+if (!$titleInput) throw new Error('$titleInput missing');
+
 const $photoInput = document.querySelector(
   'input#photo-url-input',
 ) as HTMLInputElement;
 if (!$photoInput) throw new Error('$photoInput missing');
+
+const $notesTextArea = document.querySelector(
+  'textarea#notes-textarea',
+) as HTMLTextAreaElement;
+if (!$notesTextArea) throw new Error('$notesTextArea missing');
 
 const $entryForm = document.querySelector('form#entry-form') as HTMLFormElement;
 if (!$entryForm) throw new Error('$entryForm missing');
@@ -110,6 +120,11 @@ if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 
 const $newAnchor = document.querySelector('a.new') as HTMLAnchorElement;
 if (!$newAnchor) throw new Error('$newAnchor missing');
+
+const $entryFormHeader = document.querySelector(
+  'h2.entry-form-header',
+) as HTMLHeadingElement;
+if (!$entryFormHeader) throw new Error('$entryFormHeader missing');
 
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
@@ -165,4 +180,23 @@ $entriesAnchor.addEventListener('click', function () {
 
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
+});
+
+$ul.addEventListener('click', function (event: Event) {
+  const $eventTarget = event.target as HTMLElement;
+  const $li = $eventTarget.closest('li') as HTMLLIElement;
+
+  if ($eventTarget.tagName === 'I') {
+    viewSwap('entry-form');
+
+    const id: number = Number($li.getAttribute('data-entry-id'));
+    data.editing = getEntry(id) as EntryData;
+
+    $image.src = data.editing.photoUrl;
+    $titleInput.value = data.editing.title;
+    $photoInput.value = data.editing.photoUrl;
+    $notesTextArea.value = data.editing.notes;
+
+    $entryFormHeader.textContent = 'Edit Entry';
+  }
 });

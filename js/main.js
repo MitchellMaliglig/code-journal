@@ -57,8 +57,12 @@ function viewSwap(view) {
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 const $image = document.querySelector('img#entry-photo');
 if (!$image) throw new Error('$image missing');
+const $titleInput = document.querySelector('input#title-input');
+if (!$titleInput) throw new Error('$titleInput missing');
 const $photoInput = document.querySelector('input#photo-url-input');
 if (!$photoInput) throw new Error('$photoInput missing');
+const $notesTextArea = document.querySelector('textarea#notes-textarea');
+if (!$notesTextArea) throw new Error('$notesTextArea missing');
 const $entryForm = document.querySelector('form#entry-form');
 if (!$entryForm) throw new Error('$entryForm missing');
 const $ul = document.querySelector('ul');
@@ -75,6 +79,8 @@ const $entriesAnchor = document.querySelector('a.entries');
 if (!$entriesAnchor) throw new Error('missing $entriesAnchor');
 const $newAnchor = document.querySelector('a.new');
 if (!$newAnchor) throw new Error('$newAnchor missing');
+const $entryFormHeader = document.querySelector('h2.entry-form-header');
+if (!$entryFormHeader) throw new Error('$entryFormHeader missing');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
@@ -117,4 +123,18 @@ $entriesAnchor.addEventListener('click', function () {
 });
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
+});
+$ul.addEventListener('click', function (event) {
+  let $eventTarget = event.target;
+  let $li = $eventTarget.closest('li');
+  if ($eventTarget.tagName === 'I') {
+    viewSwap('entry-form');
+    let id = Number($li.getAttribute('data-entry-id'));
+    data.editing = getEntry(id);
+    $image.src = data.editing.photoUrl;
+    $titleInput.value = data.editing.title;
+    $photoInput.value = data.editing.photoUrl;
+    $notesTextArea.value = data.editing.notes;
+    $entryFormHeader.textContent = 'Edit Entry';
+  }
 });
