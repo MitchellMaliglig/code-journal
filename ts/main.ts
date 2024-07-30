@@ -20,6 +20,7 @@ function checkUrl(str: string): boolean {
 
 function renderEntry(entry: EntryData): HTMLLIElement {
   const $listItem = document.createElement('li');
+  $listItem.setAttribute('data-entry-id', entry.entryId.toString());
 
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row');
@@ -36,11 +37,15 @@ function renderEntry(entry: EntryData): HTMLLIElement {
   const $h3 = document.createElement('h3');
   $h3.textContent = entry.title;
 
+  const $pencilIcon = document.createElement('i');
+  $pencilIcon.setAttribute('class', 'fa-solid fa-pencil');
+
   const $p = document.createElement('p');
   $p.textContent = entry.notes;
 
   $listItem.append($row);
   $imageHalf.append($image);
+  $h3.append($pencilIcon);
   $textHalf.append($h3, $p);
   $row.append($imageHalf, $textHalf);
   return $listItem;
