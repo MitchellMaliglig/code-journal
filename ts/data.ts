@@ -10,7 +10,7 @@ interface EntryData {
 interface Data {
   view: string;
   entries: EntryData[];
-  editing: null;
+  editing: EntryData | null;
   nextEntryId: number;
 }
 
@@ -36,10 +36,31 @@ function readData(): Data {
   }
 }
 
+function getEntry(id: number): EntryData | null {
+  for (let i = 0; i < data.entries.length; i++) {
+    if (data.entries[i].entryId === id) {
+      return data.entries[i];
+    }
+  }
+  return null;
+}
+
+function replaceEntry(entry: EntryData): void {
+  for (let i = 0; i < data.entries.length; i++) {
+    if (data.entries[i].entryId === entry.entryId) {
+      data.entries[i] = entry;
+    }
+  }
+}
+
 const data: Data = readData();
 
 // 19:10  error  'writeData' is defined but never used  @typescript-eslint/no-unused-vars
+// 39:10  error  'getEntry' is defined but never used  @typescript-eslint/no-unused-vars
+// 48:10  error  'replaceEntry' is defined but never used  @typescript-eslint/no-unused-vars
 const false_ = false;
 if (false_) {
   writeData();
+  getEntry(1);
+  replaceEntry({ title: '', photoUrl: '', notes: '', entryId: 0 });
 }

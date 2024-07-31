@@ -57,6 +57,10 @@ header {
   margin-bottom: 1rem;
 }
 
+i.fa-solid.fa-pencil {
+  float: right;
+}
+
 /* yes */
 
 button,
@@ -83,6 +87,7 @@ ul {
 }
 
 a:hover,
-button:hover {
+button:hover,
+i.fa-solid.fa-pencil:hover {
   cursor: pointer;
 }
