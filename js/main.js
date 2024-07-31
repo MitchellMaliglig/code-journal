@@ -40,6 +40,13 @@ function toggleNoEntries() {
     $noEntriesText.className = 'no-entries';
   }
 }
+function toggleEntryFormHeader() {
+  if ($entryFormHeader.textContent === 'New Entry') {
+    $entryFormHeader.textContent = 'Edit Entry';
+  } else if ($entryFormHeader.textContent === 'Edit Entry') {
+    $entryFormHeader.textContent = 'New Entry';
+  }
+}
 function viewSwap(view) {
   if (view === 'entries' || view === 'entry-form') {
     if (view === 'entries') {
@@ -48,6 +55,14 @@ function viewSwap(view) {
     } else if (view === 'entry-form') {
       $dataViewEntries.className = 'hidden';
       $dataViewEntryForm.className = '';
+      // user loses edits if they go back to entries
+      // without saving
+      if (data.editing !== null) {
+        $image.src = defaultImageUrl;
+        toggleEntryFormHeader();
+        $entryForm.reset();
+        data.editing = null;
+      }
     }
     data.view = view;
     // show the view which was displayed prior to page refresh.
@@ -92,7 +107,7 @@ $photoInput.addEventListener('input', function (event) {
 $entryForm.addEventListener('submit', function (event) {
   event.preventDefault();
   const $formElements = $entryForm.elements;
-  let entryData = {
+  const entryData = {
     title: $formElements.title.value,
     photoUrl: $formElements.photoUrl.value,
     notes: $formElements.notes.value,
@@ -109,12 +124,12 @@ $entryForm.addEventListener('submit', function (event) {
   } else {
     entryData.entryId = data.editing.entryId;
     replaceEntry(entryData);
-    let $li = document.querySelector(
+    const $li = document.querySelector(
       `li[data-entry-id="${entryData.entryId}"]`,
     );
     $ul.insertBefore(renderEntry(entryData), $li);
     $li.remove();
-    $entryFormHeader.textContent = 'New Entry';
+    toggleEntryFormHeader();
     data.editing = null;
   }
   viewSwap('entries');
@@ -139,15 +154,15 @@ $newAnchor.addEventListener('click', function () {
 });
 $ul.addEventListener('click', function (event) {
   const $eventTarget = event.target;
-  const $li = $eventTarget.closest('li');
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
+    const $li = $eventTarget.closest('li');
     const id = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id);
     $image.src = data.editing.photoUrl;
     $titleInput.value = data.editing.title;
     $photoInput.value = data.editing.photoUrl;
     $notesTextArea.value = data.editing.notes;
-    $entryFormHeader.textContent = 'Edit Entry';
+    toggleEntryFormHeader();
   }
 });

@@ -30,7 +30,6 @@ function replaceEntry(entry) {
   for (let i = 0; i < data.entries.length; i++) {
     if (data.entries[i].entryId === entry.entryId) {
       data.entries[i] = entry;
-      //console.log('data.entries[i]: ', data.entries[i]);
     }
   }
 }

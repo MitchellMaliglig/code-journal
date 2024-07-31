@@ -59,6 +59,14 @@ function toggleNoEntries(): void {
   }
 }
 
+function toggleEntryFormHeader(): void {
+  if ($entryFormHeader.textContent === 'New Entry') {
+    $entryFormHeader.textContent = 'Edit Entry';
+  } else if ($entryFormHeader.textContent === 'Edit Entry') {
+    $entryFormHeader.textContent = 'New Entry';
+  }
+}
+
 function viewSwap(view: string): void {
   if (view === 'entries' || view === 'entry-form') {
     if (view === 'entries') {
@@ -67,6 +75,14 @@ function viewSwap(view: string): void {
     } else if (view === 'entry-form') {
       $dataViewEntries.className = 'hidden';
       $dataViewEntryForm.className = '';
+      // user loses edits if they go back to entries
+      // without saving
+      if (data.editing !== null) {
+        $image.src = defaultImageUrl;
+        toggleEntryFormHeader();
+        $entryForm.reset();
+        data.editing = null;
+      }
     }
     data.view = view;
     // show the view which was displayed prior to page refresh.
@@ -168,7 +184,7 @@ $entryForm.addEventListener('submit', function (event: Event) {
     $ul.insertBefore(renderEntry(entryData), $li);
     $li.remove();
 
-    $entryFormHeader.textContent = 'New Entry';
+    toggleEntryFormHeader();
     data.editing = null;
   }
 
@@ -200,11 +216,11 @@ $newAnchor.addEventListener('click', function () {
 
 $ul.addEventListener('click', function (event: Event) {
   const $eventTarget = event.target as HTMLElement;
-  const $li = $eventTarget.closest('li') as HTMLLIElement;
 
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
 
+    const $li = $eventTarget.closest('li') as HTMLLIElement;
     const id: number = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id) as EntryData;
 
@@ -213,6 +229,6 @@ $ul.addEventListener('click', function (event: Event) {
     $photoInput.value = data.editing.photoUrl;
     $notesTextArea.value = data.editing.notes;
 
-    $entryFormHeader.textContent = 'Edit Entry';
+    toggleEntryFormHeader();
   }
 });
