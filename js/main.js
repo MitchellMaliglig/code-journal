@@ -40,11 +40,11 @@ function toggleNoEntries() {
     $noEntriesText.className = 'no-entries';
   }
 }
-function toggleEntryFormHeader() {
-  if ($entryFormHeader.textContent === 'New Entry') {
-    $entryFormHeader.textContent = 'Edit Entry';
-  } else if ($entryFormHeader.textContent === 'Edit Entry') {
+function entryFormHeaderSwap(str) {
+  if (str === 'New Entry') {
     $entryFormHeader.textContent = 'New Entry';
+  } else if (str === 'Edit Entry') {
+    $entryFormHeader.textContent = 'Edit Entry';
   }
 }
 function viewSwap(view) {
@@ -59,7 +59,7 @@ function viewSwap(view) {
       // without saving
       if (data.editing !== null) {
         $image.src = defaultImageUrl;
-        toggleEntryFormHeader();
+        entryFormHeaderSwap('New Entry');
         $entryForm.reset();
         data.editing = null;
       }
@@ -74,8 +74,6 @@ function deleteModalSwap(str) {
     $deleteModal.className = 'delete-modal';
   } else if (str === 'hide') {
     $deleteModal.className = 'delete-modal hidden';
-  } else {
-    throw new Error('Invalid deleteModalSwap() argument');
   }
 }
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
@@ -146,7 +144,7 @@ $entryForm.addEventListener('submit', function (event) {
     );
     $ul.insertBefore(renderEntry(entryData), $li);
     $li.remove();
-    toggleEntryFormHeader();
+    entryFormHeaderSwap('New Entry');
     data.editing = null;
   }
   viewSwap('entries');
@@ -178,7 +176,7 @@ $ul.addEventListener('click', function (event) {
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
     deleteModalSwap('show');
-    toggleEntryFormHeader();
+    entryFormHeaderSwap('Edit Entry');
     const $li = $eventTarget.closest('li');
     const id = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id);

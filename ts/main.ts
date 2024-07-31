@@ -59,11 +59,11 @@ function toggleNoEntries(): void {
   }
 }
 
-function toggleEntryFormHeader(): void {
-  if ($entryFormHeader.textContent === 'New Entry') {
-    $entryFormHeader.textContent = 'Edit Entry';
-  } else if ($entryFormHeader.textContent === 'Edit Entry') {
+function entryFormHeaderSwap(str: string): void {
+  if (str === 'New Entry') {
     $entryFormHeader.textContent = 'New Entry';
+  } else if (str === 'Edit Entry') {
+    $entryFormHeader.textContent = 'Edit Entry';
   }
 }
 
@@ -79,7 +79,7 @@ function viewSwap(view: string): void {
       // without saving
       if (data.editing !== null) {
         $image.src = defaultImageUrl;
-        toggleEntryFormHeader();
+        entryFormHeaderSwap('New Entry');
         $entryForm.reset();
         data.editing = null;
       }
@@ -95,8 +95,6 @@ function deleteModalSwap(str: string): void {
     $deleteModal.className = 'delete-modal';
   } else if (str === 'hide') {
     $deleteModal.className = 'delete-modal hidden';
-  } else {
-    throw new Error('Invalid deleteModalSwap() argument');
   }
 }
 
@@ -214,7 +212,7 @@ $entryForm.addEventListener('submit', function (event: Event) {
     $ul.insertBefore(renderEntry(entryData), $li);
     $li.remove();
 
-    toggleEntryFormHeader();
+    entryFormHeaderSwap('New Entry');
     data.editing = null;
   }
 
@@ -254,7 +252,7 @@ $ul.addEventListener('click', function (event: Event) {
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
     deleteModalSwap('show');
-    toggleEntryFormHeader();
+    entryFormHeaderSwap('Edit Entry');
 
     const $li = $eventTarget.closest('li') as HTMLLIElement;
     const id: number = Number($li.getAttribute('data-entry-id'));
