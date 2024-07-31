@@ -57,8 +57,7 @@ header {
   margin-bottom: 1rem;
 }
 
-i.fa-solid,
-i.fa-pencil {
+i.fa-solid.fa-pencil {
   float: right;
 }
 
