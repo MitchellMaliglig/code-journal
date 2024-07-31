@@ -69,6 +69,13 @@ function viewSwap(view) {
     writeData();
   }
 }
+function toggleDeleteModal() {
+  if ($deleteModal.className === 'delete-modal hidden') {
+    $deleteModal.className = 'delete-modal';
+  } else if ($deleteModal.className === 'delete-modal') {
+    $deleteModal.className = 'delete-modal hidden';
+  }
+}
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 const $image = document.querySelector('img#entry-photo');
 if (!$image) throw new Error('$image missing');
@@ -96,6 +103,14 @@ const $newAnchor = document.querySelector('a.new');
 if (!$newAnchor) throw new Error('$newAnchor missing');
 const $entryFormHeader = document.querySelector('h2.entry-form-header');
 if (!$entryFormHeader) throw new Error('$entryFormHeader missing');
+const $deleteModal = document.querySelector('a.delete-modal');
+if (!$deleteModal) throw new Error('$deleteModal missing');
+const $deleteCancel = document.querySelector('button.delete-cancel');
+if (!$deleteCancel) throw new Error('$deleteCancel missing');
+const $deleteConfirm = document.querySelector('button.delete-confirm');
+if (!$deleteConfirm) throw new Error('$deleteConfirm missing');
+const $deleteDialog = document.querySelector('dialog.delete-dialog');
+if (!$deleteDialog) throw new Error('$deleteDialog');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
@@ -133,6 +148,7 @@ $entryForm.addEventListener('submit', function (event) {
     data.editing = null;
   }
   viewSwap('entries');
+  toggleDeleteModal();
   writeData();
   $image.src = defaultImageUrl;
   $entryForm.reset();
@@ -148,6 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 $entriesAnchor.addEventListener('click', function () {
   viewSwap('entries');
+  if (data.editing !== null) {
+    toggleDeleteModal();
+  }
 });
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
@@ -156,6 +175,8 @@ $ul.addEventListener('click', function (event) {
   const $eventTarget = event.target;
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
+    toggleDeleteModal();
+    toggleEntryFormHeader();
     const $li = $eventTarget.closest('li');
     const id = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id);
@@ -163,6 +184,15 @@ $ul.addEventListener('click', function (event) {
     $titleInput.value = data.editing.title;
     $photoInput.value = data.editing.photoUrl;
     $notesTextArea.value = data.editing.notes;
-    toggleEntryFormHeader();
   }
+});
+$deleteModal.addEventListener('click', function () {
+  $deleteDialog.showModal();
+});
+$deleteCancel.addEventListener('click', function () {
+  $deleteDialog.close();
+});
+$deleteConfirm.addEventListener('click', function () {
+  // delete code here...
+  $deleteDialog.close();
 });

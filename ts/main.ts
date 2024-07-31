@@ -90,6 +90,14 @@ function viewSwap(view: string): void {
   }
 }
 
+function toggleDeleteModal(): void {
+  if ($deleteModal.className === 'delete-modal hidden') {
+    $deleteModal.className = 'delete-modal';
+  } else if ($deleteModal.className === 'delete-modal') {
+    $deleteModal.className = 'delete-modal hidden';
+  }
+}
+
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
 
 const $image = document.querySelector('img#entry-photo') as HTMLImageElement;
@@ -142,6 +150,26 @@ const $entryFormHeader = document.querySelector(
 ) as HTMLHeadingElement;
 if (!$entryFormHeader) throw new Error('$entryFormHeader missing');
 
+const $deleteModal = document.querySelector(
+  'a.delete-modal',
+) as HTMLAnchorElement;
+if (!$deleteModal) throw new Error('$deleteModal missing');
+
+const $deleteCancel = document.querySelector(
+  'button.delete-cancel',
+) as HTMLButtonElement;
+if (!$deleteCancel) throw new Error('$deleteCancel missing');
+
+const $deleteConfirm = document.querySelector(
+  'button.delete-confirm',
+) as HTMLButtonElement;
+if (!$deleteConfirm) throw new Error('$deleteConfirm missing');
+
+const $deleteDialog = document.querySelector(
+  'dialog.delete-dialog',
+) as HTMLDialogElement;
+if (!$deleteDialog) throw new Error('$deleteDialog');
+
 $photoInput.addEventListener('input', function (event: Event) {
   const $eventTarget = event.target as HTMLInputElement;
 
@@ -189,6 +217,7 @@ $entryForm.addEventListener('submit', function (event: Event) {
   }
 
   viewSwap('entries');
+  toggleDeleteModal();
   writeData();
   $image.src = defaultImageUrl;
   $entryForm.reset();
@@ -208,6 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $entriesAnchor.addEventListener('click', function () {
   viewSwap('entries');
+  if (data.editing !== null) {
+    toggleDeleteModal();
+  }
 });
 
 $newAnchor.addEventListener('click', function () {
@@ -219,6 +251,8 @@ $ul.addEventListener('click', function (event: Event) {
 
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
+    toggleDeleteModal();
+    toggleEntryFormHeader();
 
     const $li = $eventTarget.closest('li') as HTMLLIElement;
     const id: number = Number($li.getAttribute('data-entry-id'));
@@ -228,7 +262,18 @@ $ul.addEventListener('click', function (event: Event) {
     $titleInput.value = data.editing.title;
     $photoInput.value = data.editing.photoUrl;
     $notesTextArea.value = data.editing.notes;
-
-    toggleEntryFormHeader();
   }
+});
+
+$deleteModal.addEventListener('click', function () {
+  $deleteDialog.showModal();
+});
+
+$deleteCancel.addEventListener('click', function () {
+  $deleteDialog.close();
+});
+
+$deleteConfirm.addEventListener('click', function () {
+  // delete code here...
+  $deleteDialog.close();
 });
