@@ -40,11 +40,11 @@ function toggleNoEntries() {
     $noEntriesText.className = 'no-entries';
   }
 }
-function toggleEntryFormHeader() {
-  if ($entryFormHeader.textContent === 'New Entry') {
-    $entryFormHeader.textContent = 'Edit Entry';
-  } else if ($entryFormHeader.textContent === 'Edit Entry') {
+function entryFormHeaderSwap(str) {
+  if (str === 'New Entry') {
     $entryFormHeader.textContent = 'New Entry';
+  } else if (str === 'Edit Entry') {
+    $entryFormHeader.textContent = 'Edit Entry';
   }
 }
 function viewSwap(view) {
@@ -59,7 +59,7 @@ function viewSwap(view) {
       // without saving
       if (data.editing !== null) {
         $image.src = defaultImageUrl;
-        toggleEntryFormHeader();
+        entryFormHeaderSwap('New Entry');
         $entryForm.reset();
         data.editing = null;
       }
@@ -67,6 +67,13 @@ function viewSwap(view) {
     data.view = view;
     // show the view which was displayed prior to page refresh.
     writeData();
+  }
+}
+function deleteModalSwap(str) {
+  if (str === 'show') {
+    $deleteModal.className = 'delete-modal';
+  } else if (str === 'hide') {
+    $deleteModal.className = 'delete-modal hidden';
   }
 }
 const defaultImageUrl = 'images/placeholder-image-square.jpg';
@@ -96,6 +103,14 @@ const $newAnchor = document.querySelector('a.new');
 if (!$newAnchor) throw new Error('$newAnchor missing');
 const $entryFormHeader = document.querySelector('h2.entry-form-header');
 if (!$entryFormHeader) throw new Error('$entryFormHeader missing');
+const $deleteModal = document.querySelector('a.delete-modal');
+if (!$deleteModal) throw new Error('$deleteModal missing');
+const $deleteCancel = document.querySelector('button.delete-cancel');
+if (!$deleteCancel) throw new Error('$deleteCancel missing');
+const $deleteConfirm = document.querySelector('button.delete-confirm');
+if (!$deleteConfirm) throw new Error('$deleteConfirm missing');
+const $deleteDialog = document.querySelector('dialog.delete-dialog');
+if (!$deleteDialog) throw new Error('$deleteDialog');
 $photoInput.addEventListener('input', function (event) {
   const $eventTarget = event.target;
   if (checkUrl($eventTarget.value)) {
@@ -129,10 +144,11 @@ $entryForm.addEventListener('submit', function (event) {
     );
     $ul.insertBefore(renderEntry(entryData), $li);
     $li.remove();
-    toggleEntryFormHeader();
+    entryFormHeaderSwap('New Entry');
     data.editing = null;
   }
   viewSwap('entries');
+  deleteModalSwap('hide');
   writeData();
   $image.src = defaultImageUrl;
   $entryForm.reset();
@@ -148,6 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 $entriesAnchor.addEventListener('click', function () {
   viewSwap('entries');
+  if (data.editing !== null) {
+    deleteModalSwap('hide');
+  }
 });
 $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
@@ -156,6 +175,8 @@ $ul.addEventListener('click', function (event) {
   const $eventTarget = event.target;
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
+    deleteModalSwap('show');
+    entryFormHeaderSwap('Edit Entry');
     const $li = $eventTarget.closest('li');
     const id = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id);
@@ -163,6 +184,26 @@ $ul.addEventListener('click', function (event) {
     $titleInput.value = data.editing.title;
     $photoInput.value = data.editing.photoUrl;
     $notesTextArea.value = data.editing.notes;
-    toggleEntryFormHeader();
   }
+});
+$deleteModal.addEventListener('click', function () {
+  $deleteDialog.showModal();
+});
+$deleteCancel.addEventListener('click', function () {
+  $deleteDialog.close();
+});
+$deleteConfirm.addEventListener('click', function () {
+  if (data.editing !== null) {
+    removeEntry(data.editing);
+    const $li = document.querySelector(
+      `li[data-entry-id="${data.editing.entryId}"]`,
+    );
+    $li.remove();
+    if (data.entries.length === 0) {
+      toggleNoEntries();
+    }
+  }
+  $deleteDialog.close();
+  deleteModalSwap('hide');
+  viewSwap('entries');
 });

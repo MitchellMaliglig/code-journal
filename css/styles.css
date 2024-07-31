@@ -86,8 +86,27 @@ ul {
   list-style: none;
 }
 
+button {
+  font-weight: bold;
+}
+
 a:hover,
 button:hover,
 i.fa-solid.fa-pencil:hover {
   cursor: pointer;
+}
+
+a.delete-modal {
+  color: red;
+  border-bottom: 0.1rem solid red;
+}
+
+button.delete-cancel {
+  float: left;
+  background-color: lightgray;
+  color: gray;
+}
+
+button.delete-confirm {
+  background-color: red;
 }
