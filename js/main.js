@@ -92,21 +92,34 @@ $photoInput.addEventListener('input', function (event) {
 $entryForm.addEventListener('submit', function (event) {
   event.preventDefault();
   const $formElements = $entryForm.elements;
-  const entryData = {
+  let entryData = {
     title: $formElements.title.value,
     photoUrl: $formElements.photoUrl.value,
     notes: $formElements.notes.value,
     entryId: data.nextEntryId,
   };
-  data.nextEntryId++;
-  data.entries.unshift(entryData);
-  $image.src = defaultImageUrl;
-  $ul.prepend(renderEntry(entryData));
-  viewSwap('entries');
-  if (data.entries.length === 1) {
-    toggleNoEntries();
+  if (data.editing === null) {
+    data.nextEntryId++;
+    data.entries.unshift(entryData);
+    $image.src = defaultImageUrl;
+    $ul.prepend(renderEntry(entryData));
+    if (data.entries.length === 1) {
+      toggleNoEntries();
+    }
+  } else {
+    entryData.entryId = data.editing.entryId;
+    replaceEntry(entryData);
+    let $li = document.querySelector(
+      `li[data-entry-id="${entryData.entryId}"]`,
+    );
+    $ul.insertBefore(renderEntry(entryData), $li);
+    $li.remove();
+    $entryFormHeader.textContent = 'New Entry';
+    data.editing = null;
   }
+  viewSwap('entries');
   writeData();
+  $image.src = defaultImageUrl;
   $entryForm.reset();
 });
 document.addEventListener('DOMContentLoaded', function () {
@@ -125,11 +138,11 @@ $newAnchor.addEventListener('click', function () {
   viewSwap('entry-form');
 });
 $ul.addEventListener('click', function (event) {
-  let $eventTarget = event.target;
-  let $li = $eventTarget.closest('li');
+  const $eventTarget = event.target;
+  const $li = $eventTarget.closest('li');
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
-    let id = Number($li.getAttribute('data-entry-id'));
+    const id = Number($li.getAttribute('data-entry-id'));
     data.editing = getEntry(id);
     $image.src = data.editing.photoUrl;
     $titleInput.value = data.editing.title;

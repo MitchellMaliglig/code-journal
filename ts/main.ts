@@ -147,18 +147,34 @@ $entryForm.addEventListener('submit', function (event: Event) {
     entryId: data.nextEntryId,
   };
 
-  data.nextEntryId++;
-  data.entries.unshift(entryData);
+  if (data.editing === null) {
+    data.nextEntryId++;
+    data.entries.unshift(entryData);
 
-  $image.src = defaultImageUrl;
+    $image.src = defaultImageUrl;
+    $ul.prepend(renderEntry(entryData));
 
-  $ul.prepend(renderEntry(entryData));
-  viewSwap('entries');
-  if (data.entries.length === 1) {
-    toggleNoEntries();
+    if (data.entries.length === 1) {
+      toggleNoEntries();
+    }
+  } else {
+    entryData.entryId = data.editing.entryId;
+    replaceEntry(entryData);
+
+    const $li = document.querySelector(
+      `li[data-entry-id="${entryData.entryId}"]`,
+    ) as HTMLLIElement;
+
+    $ul.insertBefore(renderEntry(entryData), $li);
+    $li.remove();
+
+    $entryFormHeader.textContent = 'New Entry';
+    data.editing = null;
   }
 
+  viewSwap('entries');
   writeData();
+  $image.src = defaultImageUrl;
   $entryForm.reset();
 });
 
