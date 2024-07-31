@@ -90,11 +90,13 @@ function viewSwap(view: string): void {
   }
 }
 
-function toggleDeleteModal(): void {
-  if ($deleteModal.className === 'delete-modal hidden') {
+function deleteModalSwap(str: string): void {
+  if (str === 'show') {
     $deleteModal.className = 'delete-modal';
-  } else if ($deleteModal.className === 'delete-modal') {
+  } else if (str === 'hide') {
     $deleteModal.className = 'delete-modal hidden';
+  } else {
+    throw new Error('Invalid deleteModalSwap() argument');
   }
 }
 
@@ -217,7 +219,7 @@ $entryForm.addEventListener('submit', function (event: Event) {
   }
 
   viewSwap('entries');
-  toggleDeleteModal();
+  deleteModalSwap('hide');
   writeData();
   $image.src = defaultImageUrl;
   $entryForm.reset();
@@ -238,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
 $entriesAnchor.addEventListener('click', function () {
   viewSwap('entries');
   if (data.editing !== null) {
-    toggleDeleteModal();
+    deleteModalSwap('hide');
   }
 });
 
@@ -251,7 +253,7 @@ $ul.addEventListener('click', function (event: Event) {
 
   if ($eventTarget.tagName === 'I') {
     viewSwap('entry-form');
-    toggleDeleteModal();
+    deleteModalSwap('show');
     toggleEntryFormHeader();
 
     const $li = $eventTarget.closest('li') as HTMLLIElement;
@@ -274,6 +276,20 @@ $deleteCancel.addEventListener('click', function () {
 });
 
 $deleteConfirm.addEventListener('click', function () {
-  // delete code here...
+  if (data.editing !== null) {
+    removeEntry(data.editing);
+
+    const $li = document.querySelector(
+      `li[data-entry-id="${data.editing.entryId}"]`,
+    ) as HTMLLIElement;
+    $li.remove();
+
+    if (data.entries.length === 0) {
+      toggleNoEntries();
+    }
+  }
+
   $deleteDialog.close();
+  deleteModalSwap('hide');
+  viewSwap('entries');
 });
